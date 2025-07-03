@@ -1,7 +1,7 @@
 """Main application entry point for FastAPI server."""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .api.routes import auth, items, tasks
+from app.api.routes import auth, items, tasks
 
 app = FastAPI()
 

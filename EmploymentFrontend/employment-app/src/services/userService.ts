@@ -21,3 +21,9 @@ export async function getUserRole() {
         method: "GET",
     });
 }
+
+export async function getEmployees() {
+    return apiFetch("auth/get_employees", {
+        method: "GET",
+    });
+}

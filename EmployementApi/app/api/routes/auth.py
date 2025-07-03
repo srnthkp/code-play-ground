@@ -43,6 +43,13 @@ class RoleResponse(BaseModel):
     role: str
 
 
+class EmployeeResponse(BaseModel):
+    """Response model for Employee."""
+    success: bool
+    message: str
+    employee: list[UserOut]
+
+
 @router.post("/register", response_model=RegisterResponse)
 def register_user(user_in: UserCreate, db: Session = Depends(get_db)):
     """Register a new user."""
@@ -71,7 +78,7 @@ def login_user(
 ):
     """Login user endpoint (to be implemented)."""
     try:
-        logged_in_user = crud_auth.lgoin_user(db=db, login_user=login_data)
+        logged_in_user = crud_auth.login_user(db=db, login_data=login_data)
         # If X-Use-Token header is present and true, return tokens in body (for mobile/API)
         if x_use_token and x_use_token.lower() == "true":
             return {
@@ -216,4 +223,15 @@ def get_user_role(db: Session = Depends(deps.get_db), current_user=Depends(deps.
         message="User role retrieved successfully.",
         role=get_user_role_text(
             logged_in_user.user_role) if logged_in_user.user_role else "Unknown"
+    )
+
+
+@router.get("/get_employees")
+def get_employees(db: Session = Depends(deps.get_db), current_user=Depends(deps.require_login)):
+    """Retrieve all the employees."""
+
+    return EmployeeResponse(
+        success=True,
+        message="Employees retrieved successfully.",
+        employee=crud_auth.get_all_employees(db=db)
     )

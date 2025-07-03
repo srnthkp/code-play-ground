@@ -26,6 +26,8 @@ class TaskUpdate(BaseModel):
     status: Optional[str] = None
     is_deleted: Optional[bool] = None
     modified_by: Optional[int] = None
+    assigned_to: Optional[int] = None
+    assigned_to_name: Optional[str] = None
 
 
 class Task(TaskBase):

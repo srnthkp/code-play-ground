@@ -1,6 +1,7 @@
 """Crud operations for Task model."""
 from sqlalchemy.orm import Session
 from app.models.task import Task
+from app.models.user import User
 from app.schemas.task import TaskCreate, TaskUpdate
 
 
@@ -21,7 +22,8 @@ def get_task(db: Session, task_id: int):
 
 def get_tasks(db: Session, skip: int = 0, limit: int = 100):
     """Retrieve a list of tasks with pagination."""
-    db_tasks = db.query(Task).offset(skip).limit(limit).all()
+    db_tasks = db.query(Task, User).join(
+        User, Task.assigned_to == User.id).offset(skip).limit(limit).all()
     return [
         TaskUpdate(
             id=task.id,
@@ -31,9 +33,10 @@ def get_tasks(db: Session, skip: int = 0, limit: int = 100):
             priority=task.priority,
             assigned_to=task.assigned_to,
             due_date=task.due_date,
-            assigned_by=task.assigned_by
+            assigned_by=task.assigned_by,
+            assigned_to_name=user.full_name if user else None,
         )
-        for task in db_tasks
+        for task, user in db_tasks
     ]
 
 

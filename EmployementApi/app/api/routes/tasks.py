@@ -22,7 +22,7 @@ class TasksResponse(BaseModel):
     """Response model for delete task."""
     success: bool
     message: str
-    task: List[TaskUpdate]
+    tasks: List[TaskUpdate]
 
 
 @router.get("/read_tasks", response_model=TasksResponse)
@@ -34,7 +34,7 @@ def read_tasks(skip: int = 0, limit: int = 100, db: Session = Depends(deps.get_d
     return TasksResponse(
         success=True,
         message="Task read successfully",
-        task=tasks
+        tasks=tasks
     )
 
 
